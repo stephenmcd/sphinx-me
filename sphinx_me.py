@@ -3,7 +3,7 @@
 from __future__ import with_statement
 from datetime import datetime
 from os.path import abspath, dirname, exists, join, isdir, splitext
-from os import getcwd, listdir, mkdir, sep
+from os import chdir, getcwd, listdir, mkdir, sep
 from subprocess import check_output
 import sys
 
@@ -38,6 +38,16 @@ def install():
         f.write("from sphinx_me import setup_conf; setup_conf(globals())\n")
     print
     print "SUCCESS: Sphinx docs layout created in %s" % docs_path
+    try:
+        import sphinx
+    except ImportError:
+        print
+        print "Sphinx not installed. Not building docs."
+    else:
+        build_path = join(docs_path, "build")
+        check_output(["sphinx-build", docs_path, build_path])
+        print
+        print "Docs built in %s" % build_path
 
 def get_version(module):
     """
@@ -68,6 +78,7 @@ def setup_conf(conf_globals):
     author.
     """
     project_path = abspath(join(dirname(conf_globals["__file__"]), ".."))
+    chdir(project_path)
     sys.path.insert(0, project_path)
     authors_file = "AUTHORS"
     version = None
@@ -108,18 +119,18 @@ def setup_conf(conf_globals):
                 module = __import__(name)
             except (ImportError, ValueError):
                 continue
-            if version is None:
+            if not version:
                 version = get_version(module)
-            if version is not None and author is None:
+            if version and not author:
                 try:
                     author = getattr(module, "__author__")
                 except AttributeError:
                     pass
 
     # Ask for any values that couldn't be found.
-    if version is None:
+    if not version:
         version = raw_input("No version number found, please enter one: ")
-    if author is None:
+    if not author:
         author = raw_input("No author found, please enter one: ")
         with open(join(project_path, authors_file), "w") as f:
             f.write(author)
@@ -132,14 +143,14 @@ def setup_conf(conf_globals):
         "master_doc": "index",
         "copyright": u"%s, %s" % (datetime.now().year, author),
     }
+    pad = max([len(k) for k in settings.keys()]) + 3
     print
     print "sphinx-me using the following values:"
     print
-    pad = max([len(k) for k in settings.keys()]) + 1
-    for k, v in settings.items():
-        print (k + ":").ljust(pad), v
+    print "\n".join([(k + ":").ljust(pad) + v for k, v in settings.items()])
     print
     conf_globals.update(settings)
+
 
 if __name__ == "__main__":
     install()
