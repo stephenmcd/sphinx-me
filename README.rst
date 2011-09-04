@@ -6,9 +6,9 @@ for documentation? Want to host your README on `Read The Docs`_?
 
 sphinx-me is a `BSD licensed`_ tool that will create a `Sphinx`_
 documentation shell for your project and include the README file
-as the index file. It handles extracting the required meta data
-such as the project name, author and version from your project for
-use in your Sphinx docs.
+as the documentation index. It handles extracting the required meta
+data such as the project name, author and version from your project
+for use in your Sphinx docs.
 
 Once you use sphinx-me to build your Sphinx docs, you can then
 add your project to the Read The Docs site and have your project's
