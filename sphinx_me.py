@@ -91,3 +91,6 @@ def setup_conf(conf_globals):
         "master_doc": "index",
         "copyright": u"%s, %s" % (datetime.now().year, author),
     })
+
+if __name__ == "__main__":
+    install()
