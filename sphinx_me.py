@@ -4,7 +4,7 @@ from __future__ import with_statement
 from datetime import datetime
 from os.path import abspath, dirname, exists, join, isdir, splitext
 from os import chdir, getcwd, listdir, mkdir, sep
-from subprocess import check_output
+from subprocess import Popen, PIPE
 import sys
 
 
@@ -45,7 +45,7 @@ def install():
         print "Sphinx not installed. Not building docs."
     else:
         build_path = join(docs_path, "build")
-        check_output(["sphinx-build", docs_path, build_path])
+        Popen(["sphinx-build", docs_path, build_path]).wait()
         print
         print "Docs built in %s" % build_path
 
@@ -68,6 +68,15 @@ def get_version(module):
         except AttributeError:
             pass
         return version
+
+def get_setup_attribute(attribute, setup_path):
+    """
+    Runs the project's setup.py script in a process with an arg that
+    will print out the value for a particular attribute such as author
+    or version, and returns the value.
+    """
+    args = ["python", setup_path, "--%s" % attribute]
+    return Popen(args, stdout=PIPE).communicate[0].strip()
 
 def setup_conf(conf_globals):
     """
@@ -94,11 +103,10 @@ def setup_conf(conf_globals):
         except ImportError:
             pass
         else:
-            args = ["python", setup_path]
-            version = check_output(args + ["--version"]).strip()
+            version = get_setup_attribute("version", setup_path)
             if version == "0.0.0":
                 version = None
-            author = check_output(args + ["--author"]).strip()
+            author = get_setup_attribute("author", setup_path)
             if author == "UNKNOWN":
                 author = None
 
