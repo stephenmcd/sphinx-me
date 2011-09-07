@@ -76,7 +76,7 @@ def get_setup_attribute(attribute, setup_path):
     or version, and returns the value.
     """
     args = ["python", setup_path, "--%s" % attribute]
-    return Popen(args, stdout=PIPE).communicate[0].strip()
+    return Popen(args, stdout=PIPE).communicate()[0].strip()
 
 def setup_conf(conf_globals):
     """
