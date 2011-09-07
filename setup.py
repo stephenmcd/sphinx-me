@@ -7,7 +7,8 @@ setup(
     version=__import__("sphinx_me").__version__,
     author="Stephen McDonald",
     author_email="stephen.mc@gmail.com",
-    description="",
+    description="Wraps your README-only projects in a dynamic Sphinx shell "
+                "for hosting on http://readthedocs.org",
     long_description=open("README.rst").read(),
     license="BSD",
     url="http://github.com/stephenmcd/sphinx-me/",
