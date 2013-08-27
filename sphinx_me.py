@@ -8,6 +8,11 @@ from os import chdir, getcwd, listdir, mkdir, sep
 from subprocess import Popen, PIPE
 import sys
 
+try:
+    input = raw_input
+except NameError:
+    pass
+
 
 __version__ = "0.1.2"
 
@@ -141,9 +146,9 @@ def setup_conf(conf_globals):
 
     # Ask for any values that couldn't be found.
     if not version:
-        version = raw_input("No version number found, please enter one: ")
+        version = input("No version number found, please enter one: ")
     if not author:
-        author = raw_input("No author found, please enter one: ")
+        author = input("No author found, please enter one: ")
         with open(join(project_path, authors_file), "w") as f:
             f.write(author)
 
