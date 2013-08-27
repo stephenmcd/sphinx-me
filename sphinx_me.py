@@ -71,7 +71,7 @@ def get_version(module):
         if callable(version):
             version = version()
         try:
-            version = ".".join([unicode(i) for i in version.__iter__()])
+            version = ".".join([i for i in version.__iter__()])
         except AttributeError:
             pass
         return version
