@@ -10,6 +10,7 @@ import sys
 
 try:
     input = raw_input
+    str = unicode
 except NameError:
     pass
 
@@ -56,6 +57,12 @@ def install():
         print("Docs built in %s" % build_path)
 
 
+def decode_utf8(s):
+    if not isinstance(s, str):
+        return str(s, encoding='utf-8')
+    return s
+
+
 def get_version(module):
     """
     Attempts to read a version attribute from the given module that
@@ -71,7 +78,7 @@ def get_version(module):
         if callable(version):
             version = version()
         try:
-            version = ".".join([i for i in version.__iter__()])
+            version = ".".join([str(i) for i in version.__iter__()])
         except AttributeError:
             pass
         return version
@@ -129,7 +136,7 @@ def setup_conf(conf_globals):
                 for line in f.readlines():
                     line = line.strip("*- \n\r\t")
                     if line:
-                        author = line
+                        author = decode_utf8(line)
                         break
         elif name not in ignore and (isdir(path) or splitext(name)[1] == ".py"):
             try:
@@ -140,7 +147,7 @@ def setup_conf(conf_globals):
                 version = get_version(module)
             if version and not author:
                 try:
-                    author = getattr(module, "__author__")
+                    author = decode_utf8(getattr(module, "__author__"))
                 except AttributeError:
                     pass
 
@@ -149,8 +156,9 @@ def setup_conf(conf_globals):
         version = input("No version number found, please enter one: ")
     if not author:
         author = input("No author found, please enter one: ")
-        with open(join(project_path, authors_file), "w") as f:
-            f.write(author)
+        author = decode_utf8(author)
+        with open(join(project_path, authors_file), "wb") as f:
+            f.write(author.encode('utf-8'))
 
     # Inject the minimum required names into the conf module.
     settings = {
