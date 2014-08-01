@@ -166,7 +166,7 @@ def setup_conf(conf_globals):
         "release": version,
         "project": project_path.rstrip(sep).split(sep)[-1],
         "master_doc": "index",
-        "copyright": u"%s, %s" % (datetime.now().year, author),
+        "copyright": "%s, %s" % (datetime.now().year, author),
     }
     pad = max([len(k) for k in settings.keys()]) + 3
     print()
