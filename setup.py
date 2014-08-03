@@ -1,5 +1,18 @@
 
+import sys
+from shutil import rmtree
 from setuptools import setup
+
+
+if sys.argv[:2] == ["setup.py", "bdist_wheel"]:
+    # Remove previous build dir when creating a wheel build,
+    # since if files have been removed from the project,
+    # they'll still be cached in the build dir and end up
+    # as part of the build, which is unexpected.
+    try:
+        rmtree("build")
+    except:
+        pass
 
 
 setup(
@@ -18,12 +31,16 @@ setup(
         sphinx-me=sphinx_me:install
     """,
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.3",
         "Topic :: Documentation",
         "Topic :: Software Development :: Documentation",
         "Topic :: Utilities",
